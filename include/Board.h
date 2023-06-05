@@ -32,6 +32,7 @@ class Board
     std::vector<Cell *> get_hints();
     std::vector<Cell *> get_unused_cells();
     std::vector<int> get_candidates(Cell *cell);
+    int get_possibility(Cell *cell);
     size_t get_peer(Cell *cell);
     int calculateDifficulty();
     void shuffle(size_t iter_num);

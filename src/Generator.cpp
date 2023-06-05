@@ -15,22 +15,32 @@ Generator::~Generator()
 
 int Generator::_reduce_logical(int cutoff)
 {
+    int unused = board.get_unused_num();
+    if (unused >= cutoff)
+        return unused;
+
     auto cells = board.get_hints();
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(cells.begin(), cells.end(), std::default_random_engine(seed));
 
     for (auto &cell : cells)
     {
-        if (board.get_candidates(cell).size() == 1)
+        if (board.get_possibility(cell) == 1)
         {
             cell->value = 0;
+            if (++unused == cutoff)
+                break;
         }
     }
-    return 0;
+    return unused;
 }
 
 int Generator::_reduce_random(int cutoff)
 {
+    int unused = board.get_unused_num();
+    if (unused >= cutoff)
+        return unused;
+
     auto existing = board.get_hints();
     std::vector<std::pair<size_t, Cell *>> keys(existing.size());
     for (size_t i = 0; i < existing.size(); i++)
@@ -66,22 +76,30 @@ int Generator::_reduce_random(int cutoff)
         if (ambiguous)
         {
             cell->value = 0;
+            if (++unused == cutoff)
+                break;
         }
     }
-    return 0;
+    return unused;
 }
 
 int Generator::_reduce_recursion(int cutoff)
 {
+    int unused = board.get_unused_num();
+    if (unused >= cutoff)
+        return unused;
+
     auto cells = board.get_hints();
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(cells.begin(), cells.end(), std::default_random_engine(seed));
 
     for (auto &cell : cells)
     {
-        if (board.get_candidates(cell).size() == 1)
+        if (board.get_possibility(cell) == 1)
         {
             cell->value = 0;
+            if (++unused == cutoff)
+                break;
             continue;
         }
         int tmp = cell->value;
@@ -90,8 +108,10 @@ int Generator::_reduce_recursion(int cutoff)
         _check_recursion(count);
         if (count != 1)
             cell->value = tmp;
+        else if (++unused == cutoff)
+            break;
     }
-    return 0;
+    return unused;
 }
 /// @brief
 /// @param count 解的个数

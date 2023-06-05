@@ -90,6 +90,31 @@ std::vector<int> Board::get_candidates(Cell *cell)
     return candidates;
 }
 
+int Board::get_possibility(Cell *cell)
+{
+    std::array<bool, 9 + 1> occupation{};
+    for (auto &neighbor : rows[cell->row])
+    {
+        occupation[neighbor->value] = true;
+    }
+    for (auto &neighbor : columns[cell->col])
+    {
+        occupation[neighbor->value] = true;
+    }
+    for (auto &neighbor : boxes[cell->box])
+    {
+        occupation[neighbor->value] = true;
+    }
+
+    int possibility = 9;
+    occupation[cell->value] = false;
+    for (int i = 1; i <= 9; i++)
+    {
+        possibility -= occupation[i];
+    }
+    return possibility;
+}
+
 size_t Board::get_peer(Cell *cell)
 {
     std::unordered_set<Cell *> peer;
