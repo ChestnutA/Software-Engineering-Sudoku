@@ -31,6 +31,7 @@ class Board
     ~Board();
     std::vector<Cell *> get_hints();
     std::vector<Cell *> get_unused_cells();
+    int get_unused_num();
     std::vector<int> get_candidates(Cell *cell);
     int get_possibility(Cell *cell);
     size_t get_peer(Cell *cell);

@@ -62,6 +62,19 @@ std::vector<Cell *> Board::get_unused_cells()
     return unused_cells;
 }
 
+int Board::get_unused_num()
+{
+    int unused_cells = 0;
+    for (auto &cell : cells)
+    {
+        if (cell->value == 0)
+        {
+            unused_cells++;
+        }
+    }
+    return unused_cells;
+}
+
 std::vector<int> Board::get_candidates(Cell *cell)
 {
     std::array<bool, 9 + 1> occupation{};
