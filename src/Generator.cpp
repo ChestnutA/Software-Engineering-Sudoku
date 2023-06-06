@@ -66,7 +66,8 @@ int Generator::_reduce_random(int cutoff)
 
             // if solver can fill every box and the solution is valid then
             // puzzle becomes ambiguous after removing particular cell, so we can break out
-            if (hasUniqueSolution(board))
+            solver.input_problem(board);
+            if (solver.is_unique())
             {
                 cell->value = original;
                 ambiguous = false;
@@ -166,20 +167,20 @@ int main(int argc, char const *argv[])
     Generator gen(board);
     std::ofstream fout("sudoku-problem.txt");    
     
-    gen._reduce_logical();
-    std::cout << gen.board.get_unused_cells().size() << std::endl;
-    gen._reduce_random(15);
-    std::cout << gen.board.get_unused_cells().size() << std::endl;
-    gen._reduce_recursion();
-    std::cout << gen.board.get_unused_cells().size() << std::endl;
+    // gen._reduce_logical();
+    // std::cout << gen.board.get_unused_cells().size() << std::endl;
+    // gen._reduce_random(15);
+    // std::cout << gen.board.get_unused_cells().size() << std::endl;
+    // gen._reduce_recursion();
+    // std::cout << gen.board.get_unused_num() << std::endl;
 
-    for (int i = 0; i < 9; i++)
-    {
-        for (int j = 0; j < 9; j++)
-        {
-            fout << gen.board.cells[i * 9 + j]->value << ' ';
-        }
-        fout << std::endl;
-    }
+    // for (int i = 0; i < 9; i++)
+    // {
+    //     for (int j = 0; j < 9; j++)
+    //     {
+    //         fout << gen.board.cells[i * 9 + j]->value << ' ';
+    //     }
+    //     fout << std::endl;
+    // }
     return 0;
 }

@@ -4,10 +4,15 @@
 #include <algorithm>
 #include <random>
 #include <chrono>
-#include <fstream>
 #include <iostream>
+#include <fstream>
+
+#include "Solver.h"
 class Generator
 {
+private:
+    Solver solver;
+
 public:
     Board board;
     Generator(std::vector<int> numbers);
