@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include "Solver.h"
+
 class Generator
 {
 private:

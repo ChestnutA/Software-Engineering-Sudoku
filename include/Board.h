@@ -3,6 +3,9 @@
 #include <vector>
 #include <array>
 
+constexpr auto N = 3;
+constexpr auto UNIT = N * N;
+
 struct Cell
 {
     int row;
@@ -14,9 +17,9 @@ struct Cell
 class Board
 {
  private:
-    std::array<std::array<Cell *, 9>, 9> rows;
-    std::array<std::array<Cell *, 9>, 9> columns;
-    std::array<std::array<Cell *, 9>, 9> boxes;
+    std::array<std::array<Cell *, UNIT>, UNIT> rows;
+    std::array<std::array<Cell *, UNIT>, UNIT> columns;
+    std::array<std::array<Cell *, UNIT>, UNIT> boxes;
 
     void swap_row(int row_index1, int row_index2, bool allow = false);
     void swap_col(int col_index1, int col_index2, bool allow = false);
@@ -24,7 +27,7 @@ class Board
     void swap_floor(int floor_index1, int floor_index2);
 
  public:
-    std::array<Cell *, 9 * 9> cells;
+    std::array<Cell *, UNIT * UNIT> cells;
 
  public:
     explicit Board(std::vector<int> numbers);
