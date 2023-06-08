@@ -149,6 +149,43 @@ size_t Board::get_peer(Cell *cell)
     return peer.size();
 }
 
+int Board::calculateDifficulty()
+{
+    std::array<int, UNIT * UNIT> store;
+    for (size_t i = 0; i < UNIT * UNIT; i++)
+    {
+        store[i] = cells[i]->value;
+    }
+
+    int posi = 0, free = 0;
+    while (true)
+    {
+        int modified = false;
+        for (auto &blank : get_unused_cells())
+        {
+            if (get_possibility(blank) == 1)
+            {
+                blank->value = get_candidates(blank)[0];
+                modified = true;
+            }
+        }
+        if (!modified)
+            break;
+    }
+    for (auto &blank : get_unused_cells())
+    {
+        int p = get_possibility(blank);
+        posi += p * p;
+        free += (p - 1) * (p - 1);
+    }
+
+    for (size_t i = 0; i < UNIT * UNIT; i++)
+    {
+        cells[i]->value = store[i];
+    }
+    return posi;
+}
+
 void Board::_swap_row(int row_index1, int row_index2)
 {
     if (_allow_swap || row_index1 / N == row_index2 / N)
@@ -197,13 +234,22 @@ void Board::shuffle(size_t iter_num)
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine engine(seed);
     std::uniform_int_distribution<> op(0, 3);
-    std::uniform_int_distribution<> region(0, N-1);
-    std::uniform_int_distribution<> offset(1, N-1);
+    std::uniform_int_distribution<> region(0, N - 1);
+    std::uniform_int_distribution<> offset(1, N - 1);
     for (size_t _ = 0; _ < iter_num; _++)
     {
-        int chute = region(engine) * N,
+        int choice = op(engine),
+            chute = region(engine) * N,
             off1 = region(engine),
             off2 = (off1 + offset(engine)) % N;
+        // if (choice < 2)
+        // {
+        //     swaps[choice](*this, chute + off1, chute + off2);
+        // }
+        // else
+        // {
+        //     swaps[choice](*this, off1, off2);
+        // }
         switch (op(engine))
         {
         case 0:

@@ -211,34 +211,34 @@ void Generator::_check_recursion(int &count)
     }
 }
 
-int main(int argc, char const *argv[])
-{
-    std::ifstream fin("../resource/sudoku.txt");
-    std::vector<int> board(UNIT * UNIT);
-    for (int i = 0; i < UNIT; i++)
-    {
-        for (int j = 0; j < UNIT; j++)
-        {
-            fin >> board[i * UNIT + j];
-        }
-    }
-    Generator gen(board);
-    std::ofstream fout("sudoku-problem.txt");    
+// int main(int argc, char const *argv[])
+// {
+//     std::ifstream fin("../resource/sudoku.txt");
+//     std::vector<int> board(UNIT * UNIT);
+//     for (int i = 0; i < UNIT; i++)
+//     {
+//         for (int j = 0; j < UNIT; j++)
+//         {
+//             fin >> board[i * UNIT + j];
+//         }
+//     }
+//     Generator gen(board);
+//     std::ofstream fout("sudoku-problem.txt");    
     
-    // gen._reduce_logical();
-    // std::cout << gen.board.get_unused_cells().size() << std::endl;
-    // gen._reduce_random(15);
-    // std::cout << gen.board.get_unused_cells().size() << std::endl;
-    // gen._reduce_recursion();
-    // std::cout << gen.board.get_unused_num() << std::endl;
+//     // gen._reduce_logical();
+//     // std::cout << gen.board.get_unused_cells().size() << std::endl;
+//     // gen._reduce_random(15);
+//     // std::cout << gen.board.get_unused_cells().size() << std::endl;
+//     // gen._reduce_recursion();
+//     // std::cout << gen.board.get_unused_num() << std::endl;
 
-    // for (int i = 0; i < UNIT; i++)
-    // {
-    //     for (int j = 0; j < UNIT; j++)
-    //     {
-    //         fout << gen.board.cells[i * UNIT + j]->value << ' ';
-    //     }
-    //     fout << std::endl;
-    // }
-    return 0;
-}
+//     // for (int i = 0; i < UNIT; i++)
+//     // {
+//     //     for (int j = 0; j < UNIT; j++)
+//     //     {
+//     //         fout << gen.board.cells[i * UNIT + j]->value << ' ';
+//     //     }
+//     //     fout << std::endl;
+//     // }
+//     return 0;
+// }
