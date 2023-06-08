@@ -13,6 +13,64 @@ Generator::~Generator()
 {
 }
 
+void Generator::recover(Board &base)
+{
+    for (size_t i = 0; i < base.cells.size(); i++)
+    {
+        board.cells[i]->value = base.cells[i]->value;
+    }
+}
+
+void Generator::generate_closing(int num)
+{
+    std::vector<int> base(UNIT * UNIT);
+    std::array<int, UNIT> range;
+    for (size_t i = 0; i < UNIT; i++)
+    {
+        range[i] = i + 1;
+    }
+    int round = 0, gen = 0;
+    std::ofstream fout("closing.txt");
+    while (true)
+    {
+        do
+        {
+            std::copy(range.begin(), range.end(), base.begin());
+            base[UNIT] = range[N + round];
+            solver.input_problem(base);
+            solver.solve();
+            solver.output_solution(fout, ++gen != num);
+            if (gen == num)
+                return;
+        } while (std::next_permutation(range.begin(), range.end()));
+        round++;
+    }
+}
+
+void Generator::generate_game(std::ofstream &oup, int bottom, int top)
+{
+    auto blank_num = _reduce_logical(top);
+    while (blank_num < bottom)
+    {
+        if (blank_num >= UNIT * UNIT / 2)
+        {
+            blank_num = _reduce_random(top);
+            blank_num = _reduce_recursion(bottom + rand() % (top-bottom+1));
+        }
+        else
+        {
+            blank_num = _reduce_recursion(bottom);
+        }
+    }
+
+    for (size_t i = 0; i < UNIT * UNIT; i++)
+    {
+        oup << (char)(board.cells[i]->value ? board.cells[i]->value + '0' : '$')
+            << " \n"[i % UNIT == UNIT - 1];
+    }
+    oup << std::endl;
+}
+
 int Generator::_reduce_logical(int cutoff)
 {
     int unused = board.get_unused_num();
@@ -156,12 +214,12 @@ void Generator::_check_recursion(int &count)
 int main(int argc, char const *argv[])
 {
     std::ifstream fin("../resource/sudoku.txt");
-    std::vector<int> board(9 * 9);
-    for (int i = 0; i < 9; i++)
+    std::vector<int> board(UNIT * UNIT);
+    for (int i = 0; i < UNIT; i++)
     {
-        for (int j = 0; j < 9; j++)
+        for (int j = 0; j < UNIT; j++)
         {
-            fin >> board[i * 9 + j];
+            fin >> board[i * UNIT + j];
         }
     }
     Generator gen(board);
@@ -174,11 +232,11 @@ int main(int argc, char const *argv[])
     // gen._reduce_recursion();
     // std::cout << gen.board.get_unused_num() << std::endl;
 
-    // for (int i = 0; i < 9; i++)
+    // for (int i = 0; i < UNIT; i++)
     // {
-    //     for (int j = 0; j < 9; j++)
+    //     for (int j = 0; j < UNIT; j++)
     //     {
-    //         fout << gen.board.cells[i * 9 + j]->value << ' ';
+    //         fout << gen.board.cells[i * UNIT + j]->value << ' ';
     //     }
     //     fout << std::endl;
     // }

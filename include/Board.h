@@ -21,10 +21,11 @@ class Board
     std::array<std::array<Cell *, UNIT>, UNIT> columns;
     std::array<std::array<Cell *, UNIT>, UNIT> boxes;
 
-    void swap_row(int row_index1, int row_index2, bool allow = false);
-    void swap_col(int col_index1, int col_index2, bool allow = false);
-    void swap_tower(int tower_index1, int tower_index2);
-    void swap_floor(int floor_index1, int floor_index2);
+    void _swap_row(int row_index1, int row_index2);
+    void _swap_col(int col_index1, int col_index2);
+    void _swap_tower(int tower_index1, int tower_index2);
+    void _swap_floor(int floor_index1, int floor_index2);
+    bool _allow_swap;
 
  public:
     std::array<Cell *, UNIT * UNIT> cells;

@@ -5,9 +5,9 @@ void Solver::input_problem(std::ifstream &inp)
     _reset();
 
     char ch;
-    for (size_t i = 0; i < 9; i++)
+    for (size_t i = 0; i < UNIT; i++)
     {
-        for (size_t j = 0; j < 9; j++)
+        for (size_t j = 0; j < UNIT; j++)
         {
             inp >> ch;
             board[i][j] = (ch == '$' ? 0 : ch - '0');
@@ -21,9 +21,9 @@ void Solver::input_problem(std::vector<int> numbers)
     _reset();
 
     size_t idx = 0;
-    for (size_t i = 0; i < 9; i++)
+    for (size_t i = 0; i < UNIT; i++)
     {
-        for (size_t j = 0; j < 9; j++)
+        for (size_t j = 0; j < UNIT; j++)
         {
             board[i][j] = numbers[idx++];
             _change(i, j, board[i][j]);
@@ -35,9 +35,9 @@ void Solver::input_problem(Board &_board)
     _reset();
 
     size_t idx = 0;
-    for (size_t i = 0; i < 9; i++)
+    for (size_t i = 0; i < UNIT; i++)
     {
-        for (size_t j = 0; j < 9; j++)
+        for (size_t j = 0; j < UNIT; j++)
         {
             board[i][j] = _board.cells[idx++]->value;
             _change(i, j, board[i][j]);
@@ -48,12 +48,12 @@ void Solver::input_problem(Board &_board)
 template <typename T>
 void Solver::output_solution(T &oup, bool crlf)
 {
-    for (size_t i = 0; i < 9; i++)
+    for (size_t i = 0; i < UNIT; i++)
     {
-        for (size_t j = 0; j < 9; j++)
+        for (size_t j = 0; j < UNIT; j++)
         {
             oup << (board[i][j] ? board[i][j] : '$')
-                << " \n"[j == 9 - 1];
+                << " \n"[j == UNIT - 1];
         }
     }
     if (crlf)
@@ -77,7 +77,7 @@ void Solver::_change(int row, int col, int digit)
 {
     rows[row] ^= (1 << digit);
     columns[col] ^= (1 << digit);
-    boxes[row / 3 * 3 + col / 3] ^= (1 << digit);
+    boxes[row / N * N + col / N] ^= (1 << digit);
 }
 
 void Solver::_solve_recursion(int idx)
@@ -89,7 +89,7 @@ void Solver::_solve_recursion(int idx)
     }
 
     int i = blanks[idx].first, j = blanks[idx].second;
-    int mask = ~(rows[i] | columns[j] | boxes[i / 3 * 3 + j / 3]) & FULL;
+    int mask = ~(rows[i] | columns[j] | boxes[i / N * N + j / N]) & FULL;
     for (; mask && !valid; mask &= (mask - 1))
     {
         int digit_mask = mask & (-mask);
@@ -112,13 +112,13 @@ void Solver::solve()
     while (true)
     {
         int modified = false;
-        for (size_t i = 0; i < 9; ++i)
+        for (size_t i = 0; i < UNIT; ++i)
         {
-            for (size_t j = 0; j < 9; ++j)
+            for (size_t j = 0; j < UNIT; ++j)
             {
                 if (board[i][j] == 0)
                 {
-                    int mask = ~(rows[i] | columns[j] | boxes[i / 3 * 3 + j / 3]) & FULL;
+                    int mask = ~(rows[i] | columns[j] | boxes[i / N * N + j / N]) & FULL;
                     if (!(mask & (mask - 1)))
                     {
                         int digit = __builtin_ctz(mask);
@@ -133,9 +133,9 @@ void Solver::solve()
             break;
     }
 
-    for (size_t i = 0; i < 9; ++i)
+    for (size_t i = 0; i < UNIT; ++i)
     {
-        for (size_t j = 0; j < 9; ++j)
+        for (size_t j = 0; j < UNIT; ++j)
         {
             if (board[i][j] == 0)
             {
@@ -156,7 +156,7 @@ void Solver::_solve_all(int idx)
     }
 
     int i = blanks[idx].first, j = blanks[idx].second;
-    int mask = ~(rows[i] | columns[j] | boxes[i / 3 * 3 + j / 3]) & FULL;
+    int mask = ~(rows[i] | columns[j] | boxes[i / N * N + j / N]) & FULL;
     for (; mask; mask &= (mask - 1))
     {
         int digit_mask = mask & (-mask);
@@ -175,13 +175,13 @@ bool Solver::is_unique()
     while (true)
     {
         int modified = false;
-        for (size_t i = 0; i < 9; ++i)
+        for (size_t i = 0; i < UNIT; ++i)
         {
-            for (size_t j = 0; j < 9; ++j)
+            for (size_t j = 0; j < UNIT; ++j)
             {
                 if (board[i][j] == 0)
                 {
-                    int mask = ~(rows[i] | columns[j] | boxes[i / 3 * 3 + j / 3]) & FULL;
+                    int mask = ~(rows[i] | columns[j] | boxes[i / N * N + j / N]) & FULL;
                     if (!(mask & (mask - 1)))
                     {
                         int digit = __builtin_ctz(mask);
@@ -196,9 +196,9 @@ bool Solver::is_unique()
             break;
     }
 
-    for (size_t i = 0; i < 9; ++i)
+    for (size_t i = 0; i < UNIT; ++i)
     {
-        for (size_t j = 0; j < 9; ++j)
+        for (size_t j = 0; j < UNIT; ++j)
         {
             if (board[i][j] == 0)
             {

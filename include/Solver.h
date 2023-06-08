@@ -6,13 +6,13 @@
 
 class Solver
 {
-    const int FULL = (1 << (9 + 1)) - 2;
+    const int FULL = (1 << (UNIT + 1)) - 2;
 
 private:
-    std::array<std::array<int, 9>, 9> board;
-    std::array<int, 9> rows;
-    std::array<int, 9> columns;
-    std::array<int, 9> boxes;
+    std::array<std::array<int, UNIT>, UNIT> board;
+    std::array<int, UNIT> rows;
+    std::array<int, UNIT> columns;
+    std::array<int, UNIT> boxes;
     std::vector<std::pair<int, int>> blanks;
     bool valid = true;
     int res = 0;

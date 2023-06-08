@@ -162,6 +162,38 @@ int main(int argc, char *argv[])
         }
     }
 
+    // generate closeing games
+    if (op_c)
+    {
+        Generator generator;
+        generator.generate_closing(c_num);
+    }
+
+    // Generate games
+    if (op_n)
+    {
+        std::ofstream fout("problems.txt");
+        std::vector<int> base = {
+            2, 3, 1, 4, 5, 6, 8, 9, 7,
+            5, 6, 4, 7, 8, 9, 2, 3, 1,
+            8, 9, 7, 1, 2, 3, 5, 6, 4,
+            7, 8, 9, 5, 3, 1, 4, 2, 6,
+            3, 1, 5, 6, 4, 2, 7, 8, 9,
+            4, 2, 6, 9, 7, 8, 3, 1, 5,
+            1, 4, 2, 3, 6, 5, 9, 7, 8,
+            6, 5, 3, 8, 9, 7, 1, 4, 2,
+            9, 7, 8, 2, 1, 4, 6, 5, 3};
+        Board board(base);
+        Generator generator(base);
+        generator.generate_game(fout, blank_num.first, blank_num.second);
+        for (size_t _ = 1; _ < game_num; _++)
+        {
+            board.shuffle(rand() % 20);
+            generator.recover(board);
+            generator.generate_game(fout, blank_num.first, blank_num.second);
+        }
+    }
+
     system("pause");
     return 0;
 }

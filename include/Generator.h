@@ -20,6 +20,12 @@ public:
     Generator();
     ~Generator();
 
+    void recover(Board &);
+
+    void generate_closing(int);
+    void generate_game(std::ofstream &, int);
+    void generate_game(std::ofstream &, int, int);
+
     int _reduce_logical(int cutoff = 64);
     int _reduce_random(int cutoff = 64);
     int _reduce_recursion(int cutoff = 64);

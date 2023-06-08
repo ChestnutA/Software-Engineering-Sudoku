@@ -8,16 +8,16 @@
 
 Board::Board(std::vector<int> numbers)
 {
-    if (numbers.size() == 9 * 9)
+    if (numbers.size() == UNIT * UNIT)
     {
         size_t idx = 0;
-        for (int row = 0; row < 9; row++)
+        for (int row = 0; row < UNIT; row++)
         {
-            for (int col = 0; col < 9; col++)
+            for (int col = 0; col < UNIT; col++)
             {
-                int box = row / 3 * 3 + col / 3;
+                int box = row / N * N + col / N;
                 auto new_cell = new Cell({row, col, box, numbers[idx]});
-                cells[idx++] = rows[row][col] = columns[col][row] = boxes[box][row % 3 * 3 + col % 3] = new_cell;
+                cells[idx++] = rows[row][col] = columns[col][row] = boxes[box][row % N * N + col % N] = new_cell;
             }
         }
     }
@@ -77,7 +77,7 @@ int Board::get_unused_num()
 
 std::vector<int> Board::get_candidates(Cell *cell)
 {
-    std::array<bool, 9 + 1> occupation{};
+    std::array<bool, UNIT + 1> occupation{};
     for (auto &neighbor : rows[cell->row])
     {
         occupation[neighbor->value] = true;
@@ -93,7 +93,7 @@ std::vector<int> Board::get_candidates(Cell *cell)
 
     std::vector<int> candidates;
     occupation[cell->value] = false;
-    for (int i = 1; i <= 9; i++)
+    for (int i = 1; i <= UNIT; i++)
     {
         if (!occupation[i])
         {
@@ -105,7 +105,7 @@ std::vector<int> Board::get_candidates(Cell *cell)
 
 int Board::get_possibility(Cell *cell)
 {
-    std::array<bool, 9 + 1> occupation{};
+    std::array<bool, UNIT + 1> occupation{};
     for (auto &neighbor : rows[cell->row])
     {
         occupation[neighbor->value] = true;
@@ -119,9 +119,9 @@ int Board::get_possibility(Cell *cell)
         occupation[neighbor->value] = true;
     }
 
-    int possibility = 9;
+    int possibility = UNIT;
     occupation[cell->value] = false;
-    for (int i = 1; i <= 9; i++)
+    for (int i = 1; i <= UNIT; i++)
     {
         possibility -= occupation[i];
     }
@@ -149,9 +149,9 @@ size_t Board::get_peer(Cell *cell)
     return peer.size();
 }
 
-void Board::swap_row(int row_index1, int row_index2, bool allow)
+void Board::_swap_row(int row_index1, int row_index2)
 {
-    if (allow || row_index1 / 3 == row_index2 / 3)
+    if (_allow_swap || row_index1 / N == row_index2 / N)
     {
         for (int col = 0; col < rows[row_index2].size(); col++)
         {
@@ -161,9 +161,9 @@ void Board::swap_row(int row_index1, int row_index2, bool allow)
         }
     }
 }
-void Board::swap_col(int col_index1, int col_index2, bool allow)
+void Board::_swap_col(int col_index1, int col_index2)
 {
-    if (allow || col_index1 / 3 == col_index2 / 3)
+    if (_allow_swap || col_index1 / N == col_index2 / N)
     {
         for (size_t row = 0; row < columns[col_index2].size(); row++)
         {
@@ -173,19 +173,23 @@ void Board::swap_col(int col_index1, int col_index2, bool allow)
         }
     }
 }
-void Board::swap_tower(int tower_index1, int tower_index2)
+void Board::_swap_tower(int tower_index1, int tower_index2)
 {
-    for (int i = 0; i < 3; i++)
+    _allow_swap = true;
+    for (int i = 0; i < N; i++)
     {
-        swap_col(tower_index1 * 3 + i, tower_index2 * 3 + i, true);
+        _swap_col(tower_index1 * N + i, tower_index2 * N + i);
     }
+    _allow_swap = false;
 }
-void Board::swap_floor(int floor_index1, int floor_index2)
+void Board::_swap_floor(int floor_index1, int floor_index2)
 {
-    for (int i = 0; i < 3; i++)
+    _allow_swap = true;
+    for (int i = 0; i < N; i++)
     {
-        swap_row(floor_index1 * 3 + i, floor_index2 * 3 + i, true);
+        _swap_row(floor_index1 * N + i, floor_index2 * N + i);
     }
+    _allow_swap = false;
 }
 
 void Board::shuffle(size_t iter_num)
@@ -193,26 +197,26 @@ void Board::shuffle(size_t iter_num)
     auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine engine(seed);
     std::uniform_int_distribution<> op(0, 3);
-    std::uniform_int_distribution<> region(0, 2);
-    std::uniform_int_distribution<> offset(1, 2);
+    std::uniform_int_distribution<> region(0, N-1);
+    std::uniform_int_distribution<> offset(1, N-1);
     for (size_t _ = 0; _ < iter_num; _++)
     {
-        int chute = region(engine) * 3,
+        int chute = region(engine) * N,
             off1 = region(engine),
-            off2 = (off1 + offset(engine)) % 3;
+            off2 = (off1 + offset(engine)) % N;
         switch (op(engine))
         {
         case 0:
-            swap_row(chute + off1, chute + off2);
+            _swap_row(chute + off1, chute + off2);
             break;
         case 1:
-            swap_col(chute + off1, chute + off2);
+            _swap_col(chute + off1, chute + off2);
             break;
         case 2:
-            swap_tower(off1, off2);
+            _swap_tower(off1, off2);
             break;
         case 3:
-            swap_floor(off1, off2);
+            _swap_floor(off1, off2);
             break;
 
         default:
