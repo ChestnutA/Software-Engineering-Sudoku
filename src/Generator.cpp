@@ -1,6 +1,8 @@
 #include "Generator.h"
 #include <iterator>
 
+extern bool unique_solution;
+
 Generator::Generator(std::vector<int> numbers) : board(numbers)
 {
 }
