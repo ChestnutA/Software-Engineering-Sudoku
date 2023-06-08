@@ -1,7 +1,7 @@
 #pragma once
 
-#include <vector>
 #include <array>
+#include <vector>
 #include <functional>
 
 constexpr auto N = 3;
@@ -27,7 +27,7 @@ private:
    void _swap_tower(int tower_index1, int tower_index2);
    void _swap_floor(int floor_index1, int floor_index2);
    bool _allow_swap;
-   std::vector<std::function<void(Board &, int, int)>>
+   std::array<std::function<void(Board &, int, int)>, 4>
        swaps{_swap_row, _swap_col, _swap_tower, _swap_floor};
 
 public:

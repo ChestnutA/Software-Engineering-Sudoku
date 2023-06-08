@@ -1,5 +1,8 @@
 #include "Generator.h"
-#include <iterator>
+
+#include <algorithm>
+#include <chrono>
+#include <random>
 
 extern bool unique_solution;
 

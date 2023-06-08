@@ -1,7 +1,7 @@
 #include "Board.h"
 
-#include <random>
 #include <chrono>
+#include <random>
 #include <unordered_set>
 
 Board::Board(std::vector<int> numbers)

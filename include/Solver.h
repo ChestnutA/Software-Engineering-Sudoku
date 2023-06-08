@@ -1,7 +1,8 @@
 #pragma once
+
 #include <iostream>
 #include <fstream>
-#include <cstring>
+
 #include "Board.h"
 
 class Solver

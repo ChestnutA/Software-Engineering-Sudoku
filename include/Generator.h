@@ -1,12 +1,9 @@
 #pragma once
-#include "Board.h"
 
-#include <algorithm>
-#include <random>
-#include <chrono>
 #include <iostream>
 #include <fstream>
 
+#include "Board.h"
 #include "Solver.h"
 
 class Generator

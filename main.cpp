@@ -1,12 +1,14 @@
-#include <iostream>
 #include <cstring>
-#include <unistd.h>
+
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
 #include <map>
-#include <iterator>
 #include <algorithm>
+#include <iterator>
+
+#include <unistd.h>
 
 #include "Solver.h"
 #include "Generator.h"
