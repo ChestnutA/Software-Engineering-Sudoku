@@ -1,4 +1,5 @@
 #include <cstring>
+#include <cstdlib>
 
 #include <iostream>
 #include <string>
@@ -10,6 +11,7 @@
 
 #include <unistd.h>
 
+#include "Board.h"
 #include "Solver.h"
 #include "Generator.h"
 
@@ -167,8 +169,9 @@ int main(int argc, char *argv[])
     // generate closeing games
     if (op_c)
     {
+        std::ofstream fout("closing.txt");
         Generator generator;
-        generator.generate_closing(c_num);
+        generator.generate_closing(fout, c_num);
     }
 
     // Generate games
@@ -187,12 +190,25 @@ int main(int argc, char *argv[])
             9, 7, 8, 2, 1, 4, 6, 5, 3};
         Board board(base);
         Generator generator(base);
-        generator.generate_game(fout, blank_num.first, blank_num.second);
-        for (size_t _ = 1; _ < game_num; _++)
+        if (op_r)
         {
-            board.shuffle(rand() % 20);
-            generator.recover(board);
             generator.generate_game(fout, blank_num.first, blank_num.second);
+            for (size_t _ = 1; _ < game_num; _++)
+            {
+                board.shuffle(rand() % 20);
+                generator.recover(board);
+                generator.generate_game(fout, blank_num.first, blank_num.second);
+            }
+        }
+        else if (op_m)
+        {
+            generator.generate_game(fout, level);
+            for (size_t _ = 1; _ < game_num; _++)
+            {
+                board.shuffle(rand() % 20);
+                generator.recover(board);
+                generator.generate_game(fout, level);
+            }
         }
     }
 

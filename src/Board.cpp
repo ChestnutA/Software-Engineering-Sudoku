@@ -269,3 +269,21 @@ void Board::shuffle(size_t iter_num)
         // }
     }
 }
+
+// int main()
+// {
+//     std::ifstream fin("./problems.txt");
+//     std::vector<int> a(81);
+//     while (!fin.eof())
+//     {
+//         char ch;
+//         for (size_t i = 0; i < 81; i++)
+//         {
+//             fin >> ch;
+//             a[i] = (ch == '$' ? 0 : ch - '0');
+//         }
+//         fin >> std::ws;
+//         Board b(a);
+//         std::cout << b.calculateDifficulty() << std::endl;
+//     }
+// }

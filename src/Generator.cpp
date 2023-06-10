@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <chrono>
+#include <numeric>
 #include <random>
 
 extern bool unique_solution;
@@ -26,16 +27,12 @@ void Generator::recover(Board &base)
     }
 }
 
-void Generator::generate_closing(int num)
+void Generator::generate_closing(std::ofstream &oup, int num)
 {
     std::vector<int> base(UNIT * UNIT);
     std::array<int, UNIT> range;
-    for (size_t i = 0; i < UNIT; i++)
-    {
-        range[i] = i + 1;
-    }
+    std::iota(range.begin(), range.end(), 1);
     int round = 0, gen = 0;
-    std::ofstream fout("closing.txt");
     while (true)
     {
         do
@@ -44,12 +41,32 @@ void Generator::generate_closing(int num)
             base[UNIT] = range[N + round];
             solver.input_problem(base);
             solver.solve();
-            solver.output_solution(fout, ++gen != num);
+            solver.output_solution(oup, ++gen != num);
             if (gen == num)
                 return;
         } while (std::next_permutation(range.begin(), range.end()));
         round++;
     }
+}
+
+void Generator::generate_game(std::ofstream &oup, int level /*1-3*/)
+{
+    auto blank_num = _reduce_logical(level * (N + UNIT));
+    int iter_num = level * 10;
+    do
+    {
+        if (board.calculateDifficulty() >= (level - 1) * 300)
+            break;
+        blank_num = _reduce_random(blank_num + UNIT);
+    } while (iter_num--);
+
+    std::cout<< blank_num << "\t" << board.calculateDifficulty() << '\t' << iter_num <<"\n"  ;
+    for (size_t i = 0; i < UNIT * UNIT; i++)
+    {
+        oup << (char)(board.cells[i]->value ? board.cells[i]->value + '0' : '$')
+            << " \n"[i % UNIT == UNIT - 1];
+    }
+    oup << std::endl;
 }
 
 void Generator::generate_game(std::ofstream &oup, int bottom, int top)
@@ -60,7 +77,7 @@ void Generator::generate_game(std::ofstream &oup, int bottom, int top)
         if (blank_num >= UNIT * UNIT / 2)
         {
             blank_num = _reduce_random(top);
-            blank_num = _reduce_recursion(bottom + rand() % (top-bottom+1));
+            blank_num = _reduce_recursion(bottom + rand() % (top - bottom + 1));
         }
         else
         {
@@ -228,8 +245,8 @@ void Generator::_check_recursion(int &count)
 //         }
 //     }
 //     Generator gen(board);
-//     std::ofstream fout("sudoku-problem.txt");    
-    
+//     std::ofstream fout("sudoku-problem.txt");
+
 //     // gen._reduce_logical();
 //     // std::cout << gen.board.get_unused_cells().size() << std::endl;
 //     // gen._reduce_random(15);

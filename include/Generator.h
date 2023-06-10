@@ -19,7 +19,7 @@ public:
 
     void recover(Board &);
 
-    void generate_closing(int);
+    void generate_closing(std::ofstream &, int);
     void generate_game(std::ofstream &, int);
     void generate_game(std::ofstream &, int, int);
 
