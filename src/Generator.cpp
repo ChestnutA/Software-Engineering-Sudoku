@@ -52,11 +52,11 @@ void Generator::generate_closing(std::ofstream &oup, int num)
 
 void Generator::generate_game(std::ofstream &oup, int level /*1-3*/)
 {
-    auto blank_num = _reduce_logical(level * (N + UNIT));
-        auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-        std::default_random_engine engine(seed);
-        std::uniform_int_distribution<> cutoff(N, UNIT);
-        _reduce_random(blank_num + cutoff(engine));
+    auto blank_num = _reduce_logical(level * UNIT * 2);
+    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine engine(seed);
+    std::uniform_int_distribution<> cutoff(1, N);
+    _reduce_random(blank_num + cutoff(engine));
     for (size_t _ = 0; _ < 32; _++)
     {
         if (board.calculateDifficulty() >= (level - 1) << 8)
