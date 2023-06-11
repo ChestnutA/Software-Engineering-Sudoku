@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <chrono>
 #include <numeric>
+#include <iterator>
 #include <random>
 
 extern bool unique_solution;
@@ -52,15 +53,17 @@ void Generator::generate_closing(std::ofstream &oup, int num)
 void Generator::generate_game(std::ofstream &oup, int level /*1-3*/)
 {
     auto blank_num = _reduce_logical(level * (N + UNIT));
-    int iter_num = level * 10;
-    do
+        auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+        std::default_random_engine engine(seed);
+        std::uniform_int_distribution<> cutoff(N, UNIT);
+        _reduce_random(blank_num + cutoff(engine));
+    for (size_t _ = 0; _ < 32; _++)
     {
-        if (board.calculateDifficulty() >= (level - 1) * 300)
+        if (board.calculateDifficulty() >= (level - 1) << 8)
             break;
-        blank_num = _reduce_random(blank_num + UNIT);
-    } while (iter_num--);
+        _reduce_random(++blank_num);
+    }
 
-    std::cout<< blank_num << "\t" << board.calculateDifficulty() << '\t' << iter_num <<"\n"  ;
     for (size_t i = 0; i < UNIT * UNIT; i++)
     {
         oup << (char)(board.cells[i]->value ? board.cells[i]->value + '0' : '$')
@@ -123,18 +126,13 @@ int Generator::_reduce_random(int cutoff)
 
     auto existing = board.get_hints();
     std::vector<std::pair<size_t, Cell *>> keys(existing.size());
-    for (size_t i = 0; i < existing.size(); i++)
-    {
-        keys[i] = {board.get_peer(existing[i]), existing[i]};
-    }
+    std::transform(existing.begin(), existing.end(), keys.begin(), [this](auto &cell)
+                   { return std::make_pair(board.get_peer(cell), cell); });
     std::sort(keys.begin(), keys.end());
-    std::vector<Cell *> elements;
-    for (auto it = keys.rbegin(); it != keys.rend(); it++)
-    {
-        elements.push_back(it->second);
-    }
+    std::transform(keys.rbegin(), keys.rend(), existing.begin(), [](auto &pair)
+                   { return pair.second; });
 
-    for (auto &cell : elements)
+    for (auto &cell : existing)
     {
         auto original = cell->value;
         bool ambiguous = true;
