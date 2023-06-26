@@ -1,3 +1,6 @@
 /.vscode
 /*.txt
 /*.exe
+# Clion files
+/cmake-build-debug
+/.idea
