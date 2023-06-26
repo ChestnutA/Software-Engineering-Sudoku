@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
             break;
         case 'r':
             op_r = true;
-            blank_num.first = atoi(strtok_r(optarg, "-", &_Context));
-            blank_num.second = atoi(strtok_r(NULL, "-", &_Context));
+            blank_num.first = atoi(strtok_s(optarg, "-", &_Context));
+            blank_num.second = atoi(strtok_s(NULL, "-", &_Context));
             break;
         case 'u':
             op_u = true;

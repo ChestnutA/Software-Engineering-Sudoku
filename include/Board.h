@@ -3,7 +3,7 @@
 #include <array>
 #include <vector>
 #include <functional>
-#include <cstddef>
+
 constexpr auto N = 3;
 constexpr auto UNIT = N * N;
 
