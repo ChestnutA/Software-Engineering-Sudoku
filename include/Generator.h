@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <random>
 
 #include "Board.h"
 #include "Solver.h"
@@ -10,6 +11,7 @@ class Generator
 {
 private:
     Solver solver;
+    std::default_random_engine re;
 
 public:
     Board board;

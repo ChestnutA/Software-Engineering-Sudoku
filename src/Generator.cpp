@@ -4,16 +4,17 @@
 #include <chrono>
 #include <numeric>
 #include <iterator>
-#include <random>
 
 extern bool unique_solution;
 
 Generator::Generator(std::vector<int> numbers) : board(numbers)
 {
+    re.seed(std::chrono::system_clock::now().time_since_epoch().count());
 }
 
 Generator::Generator() : board({})
 {
+    re.seed(std::chrono::system_clock::now().time_since_epoch().count());
 }
 
 Generator::~Generator()
@@ -53,10 +54,9 @@ void Generator::generate_closing(std::ofstream &oup, int num)
 void Generator::generate_game(std::ofstream &oup, int level /*1-3*/)
 {
     auto blank_num = _reduce_logical(level * UNIT * 2);
-    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine engine(seed);
-    std::uniform_int_distribution<> cutoff(1, N);
-    _reduce_random(blank_num + cutoff(engine));
+
+    static std::uniform_int_distribution<> cutoff(1, N);
+    _reduce_random(blank_num + cutoff(re));
     for (size_t _ = 0; _ < 32; _++)
     {
         if (board.calculateDifficulty() >= (level - 1) << 8)
@@ -103,8 +103,8 @@ int Generator::_reduce_logical(int cutoff)
         return unused;
 
     auto cells = board.get_hints();
-    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(cells.begin(), cells.end(), std::default_random_engine(seed));
+    // auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(cells.begin(), cells.end(), re);
 
     for (auto &cell : cells)
     {
@@ -169,8 +169,8 @@ int Generator::_reduce_recursion(int cutoff)
         return unused;
 
     auto cells = board.get_hints();
-    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(cells.begin(), cells.end(), std::default_random_engine(seed));
+    // auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(cells.begin(), cells.end(), re);
 
     for (auto &cell : cells)
     {
@@ -196,31 +196,31 @@ int Generator::_reduce_recursion(int cutoff)
 /// @param count 解的个数
 void Generator::_check_recursion(int &count)
 {
-    Cell *cur = nullptr;
-    for (auto &cell : board.cells)
-    {
-        if (cell->value == 0)
-        {
-            cur = cell;
-            break;
-        }
-    }
-    if (!cur)
-    {
-        count++;
-        return;
-    }
-    // auto v = board.get_unused_cells();
-    // if (v.empty())
+    // Cell *cur = nullptr;
+    // for (auto &cell : board.cells)
+    // {
+    //     if (cell->value == 0)
+    //     {
+    //         cur = cell;
+    //         break;
+    //     }
+    // }
+    // if (!cur)
     // {
     //     count++;
     //     return;
     // }
-    // Cell *cur = v[rand() % v.size()];
+    auto v = board.get_unused_cells();
+    if (v.empty())
+    {
+        count++;
+        return;
+    }
+    Cell *cur = v[re() % v.size()];
 
     auto candidates = board.get_candidates(cur);
-    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(candidates.begin(), candidates.end(), std::default_random_engine(seed));
+    // auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::shuffle(candidates.begin(), candidates.end(), re);
     for (auto &candidate : candidates)
     {
         cur->value = candidate;

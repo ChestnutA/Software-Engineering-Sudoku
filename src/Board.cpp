@@ -230,11 +230,11 @@ void Board::_swap_floor(int floor_index1, int floor_index2)
 
 void Board::shuffle(size_t iter_num)
 {
-    auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::default_random_engine engine(seed);
-    std::uniform_int_distribution<> op(0, 3);
-    std::uniform_int_distribution<> region(0, N - 1);
-    std::uniform_int_distribution<> offset(1, N - 1);
+    static auto seed = std::chrono::system_clock::now().time_since_epoch().count();
+    static std::default_random_engine engine(seed);
+    static std::uniform_int_distribution<> op(0, 3);
+    static std::uniform_int_distribution<> region(0, N - 1);
+    static std::uniform_int_distribution<> offset(1, N - 1);
     for (size_t _ = 0; _ < iter_num; _++)
     {
         int choice = op(engine),
@@ -272,18 +272,34 @@ void Board::shuffle(size_t iter_num)
 
 // int main()
 // {
-//     std::ifstream fin("./problems.txt");
-//     std::vector<int> a(81);
-//     while (!fin.eof())
+//         std::vector<int> base = {
+//             2, 3, 1, 4, 5, 6, 8, 9, 7,
+//             5, 6, 4, 7, 8, 9, 2, 3, 1,
+//             8, 9, 7, 1, 2, 3, 5, 6, 4,
+//             7, 8, 9, 5, 3, 1, 4, 2, 6,
+//             3, 1, 5, 6, 4, 2, 7, 8, 9,
+//             4, 2, 6, 9, 7, 8, 3, 1, 5,
+//             1, 4, 2, 3, 6, 5, 9, 7, 8,
+//             6, 5, 3, 8, 9, 7, 1, 4, 2,
+//             9, 7, 8, 2, 1, 4, 6, 5, 3};
+//         Board board(base);
+//         board.shuffle(1);
+//     for (size_t i = 0; i < UNIT; i++)
 //     {
-//         char ch;
-//         for (size_t i = 0; i < 81; i++)
+//         for (size_t j = 0; j < UNIT; j++)
 //         {
-//             fin >> ch;
-//             a[i] = (ch == '$' ? 0 : ch - '0');
+//             std::cout << (board.cells[i*9+j]->value ? board.cells[i*9+j]->value : 0)
+//                 << " \n"[j == UNIT - 1];
 //         }
-//         fin >> std::ws;
-//         Board b(a);
-//         std::cout << b.calculateDifficulty() << std::endl;
+//     }
+//     std::cout << std::endl;
+//         board.shuffle(1);
+//     for (size_t i = 0; i < UNIT; i++)
+//     {
+//         for (size_t j = 0; j < UNIT; j++)
+//         {
+//             std::cout << (board.cells[i*9+j]->value ? board.cells[i*9+j]->value : 0)
+//                 << " \n"[j == UNIT - 1];
+//         }
 //     }
 // }
