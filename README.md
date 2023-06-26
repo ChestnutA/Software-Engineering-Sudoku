@@ -2,7 +2,7 @@
 
 ## 编译
 ```
-g++ -Iinclude -o shudu ./main.cpp ./src/*
+g++ -Iinclude -o sudoku ./main.cpp ./src/*
 ```
 
 ## 使用方法
