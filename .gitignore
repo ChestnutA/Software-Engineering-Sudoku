@@ -1,5 +1,6 @@
 /.vscode
 /*.txt
+用户手册.md
 !CMakeLists.txt
 /*.exe
 # Clion files

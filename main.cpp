@@ -68,6 +68,12 @@ int main(int argc, char *argv[])
         }
     }
 
+    if (!opts.size())
+    {
+        std::cout << "This program has nothing to do." << std::endl;
+        return 0;
+    }
+
     // check arguments
     for (size_t i = 0; i < opts.size(); i++)
     {
@@ -208,6 +214,16 @@ int main(int argc, char *argv[])
                 board.shuffle(rand() % 20);
                 generator.recover(board);
                 generator.generate_game(fout, level);
+            }
+        }
+        else
+        {
+            generator.generate_game(fout, 20, 55);
+            for (size_t _ = 1; _ < game_num; _++)
+            {
+                board.shuffle(rand() % 20);
+                generator.recover(board);
+                generator.generate_game(fout, 20, 55);
             }
         }
     }

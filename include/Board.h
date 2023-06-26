@@ -28,13 +28,7 @@ private:
    void _swap_floor(int floor_index1, int floor_index2);
    bool _allow_swap;
    std::array<std::function<void(Board &, int, int)>, 4>
-       //swaps{_swap_row, _swap_col, _swap_tower, _swap_floor};
-       swaps = {
-    [](Board& board, int i, int j) { board._swap_row(i, j); },
-    [](Board& board, int i, int j) { board._swap_col(i, j); },
-    [](Board& board, int i, int j) { board._swap_tower(i, j); },
-    [](Board& board, int i, int j) { board._swap_floor(i, j); }
-};
+       swaps{_swap_row, _swap_col, _swap_tower, _swap_floor};
 
 
 public:
