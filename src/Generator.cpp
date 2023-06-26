@@ -9,12 +9,12 @@ extern bool unique_solution;
 
 Generator::Generator(std::vector<int> numbers) : board(numbers)
 {
-    re.seed(std::chrono::system_clock::now().time_since_epoch().count());
+    rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
 }
 
 Generator::Generator() : board({})
 {
-    re.seed(std::chrono::system_clock::now().time_since_epoch().count());
+    rng.seed(std::chrono::system_clock::now().time_since_epoch().count());
 }
 
 Generator::~Generator()
@@ -28,7 +28,9 @@ void Generator::recover(Board &base)
         board.cells[i]->value = base.cells[i]->value;
     }
 }
-
+/// @brief Generate the closing states of sudoku.
+/// @param oup to be used to output closing states
+/// @param num the number of closing states you want to generate
 void Generator::generate_closing(std::ofstream &oup, int num)
 {
     std::vector<int> base(UNIT * UNIT);
@@ -50,13 +52,15 @@ void Generator::generate_closing(std::ofstream &oup, int num)
         round++;
     }
 }
-
+/// @brief Generate one sudoku puzzle by level.
+/// @param oup to be used to output the puzzle
+/// @param level 1, 2 or 3 (easy, medium or hard)
 void Generator::generate_game(std::ofstream &oup, int level /*1-3*/)
 {
     auto blank_num = _reduce_logical(level * UNIT * 2);
 
     static std::uniform_int_distribution<> cutoff(1, N);
-    _reduce_random(blank_num + cutoff(re));
+    _reduce_random(blank_num + cutoff(rng));
     for (size_t _ = 0; _ < 32; _++)
     {
         if (board.calculateDifficulty() >= (level - 1) << 8)
@@ -71,7 +75,8 @@ void Generator::generate_game(std::ofstream &oup, int level /*1-3*/)
     }
     oup << std::endl;
 }
-
+/// @brief Generate one sudoku puzzle by the range of the number of blanks ([`bottom`,`top`]).
+/// @param oup to be used to output the puzzle
 void Generator::generate_game(std::ofstream &oup, int bottom, int top)
 {
     auto blank_num = _reduce_logical(top);
@@ -95,7 +100,9 @@ void Generator::generate_game(std::ofstream &oup, int bottom, int top)
     }
     oup << std::endl;
 }
-
+/// @brief Make the cell which has and only has one candidates a blank in one loop after shuffling.
+/// @param cutoff the limit of the number of blanks
+/// @return the current number of blanks
 int Generator::_reduce_logical(int cutoff)
 {
     int unused = board.get_unused_num();
@@ -104,7 +111,7 @@ int Generator::_reduce_logical(int cutoff)
 
     auto cells = board.get_hints();
     // auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(cells.begin(), cells.end(), re);
+    std::shuffle(cells.begin(), cells.end(), rng);
 
     for (auto &cell : cells)
     {
@@ -118,6 +125,9 @@ int Generator::_reduce_logical(int cutoff)
     return unused;
 }
 
+/// @brief Try to transform the cells which have maximum "neighbours" into blanks.
+/// @param cutoff the limit of the number of blanks
+/// @return the current number of blanks
 int Generator::_reduce_random(int cutoff)
 {
     int unused = board.get_unused_num();
@@ -126,9 +136,12 @@ int Generator::_reduce_random(int cutoff)
 
     auto existing = board.get_hints();
     std::vector<std::pair<size_t, Cell *>> keys(existing.size());
+    // for each hints, get the number of neighbours, and store the pair into `keys`
     std::transform(existing.begin(), existing.end(), keys.begin(), [this](auto &cell)
                    { return std::make_pair(board.get_peer(cell), cell); });
+    // make cells in ascending sort order (by the number of neighbours)
     std::sort(keys.begin(), keys.end());
+    // store descend sorted cells back to `existing`
     std::transform(keys.rbegin(), keys.rend(), existing.begin(), [](auto &pair)
                    { return pair.second; });
 
@@ -162,6 +175,9 @@ int Generator::_reduce_random(int cutoff)
     return unused;
 }
 
+/// @brief Try to make cells blanks.
+/// @param cutoff the limit of the number of blanks
+/// @return the current number of blanks
 int Generator::_reduce_recursion(int cutoff)
 {
     int unused = board.get_unused_num();
@@ -170,7 +186,7 @@ int Generator::_reduce_recursion(int cutoff)
 
     auto cells = board.get_hints();
     // auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(cells.begin(), cells.end(), re);
+    std::shuffle(cells.begin(), cells.end(), rng);
 
     for (auto &cell : cells)
     {
@@ -216,11 +232,11 @@ void Generator::_check_recursion(int &count)
         count++;
         return;
     }
-    Cell *cur = v[re() % v.size()];
+    Cell *cur = v[rng() % v.size()];
 
     auto candidates = board.get_candidates(cur);
     // auto seed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::shuffle(candidates.begin(), candidates.end(), re);
+    std::shuffle(candidates.begin(), candidates.end(), rng);
     for (auto &candidate : candidates)
     {
         cur->value = candidate;

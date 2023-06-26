@@ -22,15 +22,18 @@ private:
    std::array<std::array<Cell *, UNIT>, UNIT> columns;
    std::array<std::array<Cell *, UNIT>, UNIT> boxes;
 
+   
    void _swap_row(int row_index1, int row_index2);
    void _swap_col(int col_index1, int col_index2);
    void _swap_tower(int tower_index1, int tower_index2);
    void _swap_floor(int floor_index1, int floor_index2);
+   // be true only during `_swap_tower` and `_swap_floor`
    bool _allow_swap;
+   // implements for the interface `shuffle()`
    std::array<std::function<void(Board &, int, int)>, 4>
        swaps{_swap_row, _swap_col, _swap_tower, _swap_floor};
 
-
+// Make it easy to debug (I/O)
 public:
    std::array<Cell *, UNIT * UNIT> cells;
 

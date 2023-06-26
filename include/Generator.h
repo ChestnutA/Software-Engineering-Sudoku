@@ -11,7 +11,7 @@ class Generator
 {
 private:
     Solver solver;
-    std::default_random_engine re;
+    std::default_random_engine rng;
 
 public:
     Board board;

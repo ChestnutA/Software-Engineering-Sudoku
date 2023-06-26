@@ -17,6 +17,7 @@ private:
     std::vector<std::pair<int, int>> blanks;
     bool valid = true;
     int res = 0;
+    // be called before inputing to reset the solver
     void _reset();
     void _change(int row, int col, int digit);
     void _solve_recursion(int idx);
