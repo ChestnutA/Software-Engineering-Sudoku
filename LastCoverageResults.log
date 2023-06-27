@@ -1,0 +1,29 @@
+[2023-06-27 22:10:41] [info] Start Program:
+Path:"sudoku.exe"
+Arguments:-c 1 
+Working directory: not set.
+Modules: Selected: * Excluded: 
+Sources: Selected: main.cpp Excluded: 
+Log Level: Normal
+Cover Children: 0
+Aggregate by file: 1
+Continue after C++ exception: 0
+Optimized build support: 0
+Export: html 
+Input coverage: 
+Unified diff: 
+Excluded line regular expressions: 
+Substitute pdb source paths: 
+[2023-06-27 22:10:41] [info] Module: D:\MYCODE\Software-Engineering-Sudoku\sudoku.exe is selected because it matches selected pattern: *
+[2023-06-27 22:10:41] [info] Module: C:\Windows\System32\ntdll.dll is selected because it matches selected pattern: *
+[2023-06-27 22:10:41] [info] Module: C:\Windows\System32\kernel32.dll is selected because it matches selected pattern: *
+[2023-06-27 22:10:41] [info] Module: C:\Windows\System32\KernelBase.dll is selected because it matches selected pattern: *
+[2023-06-27 22:10:41] [info] Module: C:\Windows\System32\msvcrt.dll is selected because it matches selected pattern: *
+[2023-06-27 22:10:41] [info] Module: C:\Windows\System32\sechost.dll is selected because it matches selected pattern: *
+[2023-06-27 22:10:42] [info] ----------------------------------------------------
+[2023-06-27 22:10:42] [info] Coverage generated in Folder D:\MYCODE\Software-Engineering-Sudoku\CoverageReport-2023-06-27-22h10m42s
+[2023-06-27 22:10:42] [info] ----------------------------------------------------
+[2023-06-27 22:10:42] [info] The code coverage report is not what you expect? See the FAQ https://github.com/OpenCppCoverage/OpenCppCoverage/wiki/FAQ.
+[2023-06-27 22:10:42] [warning] No modules were selected. Please check the values of --modules and --excluded_modules.
+You can try to remove all --modules and --excluded_modules and use --modules=D:\MYCODE\Software-Engineering-Sudoku instead.
+For additional help, see https://github.com/OpenCppCoverage/OpenCppCoverage/wiki/FAQ#coverage-report-is-empty.
