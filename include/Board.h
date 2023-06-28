@@ -4,7 +4,7 @@
 #include <vector>
 #include <functional>
 
-constexpr auto N = 3;
+constexpr auto N = 3ULL;
 constexpr auto UNIT = N * N;
 
 struct Cell
@@ -45,7 +45,7 @@ public:
    int get_unused_num();
    std::vector<int> get_candidates(Cell *cell);
    int get_possibility(Cell *cell);
-   size_t get_peer(Cell *cell);
+   int get_peer(Cell *cell);
    int calculateDifficulty();
-   void shuffle(size_t iter_num);
+   void shuffle(int iter_num);
 };

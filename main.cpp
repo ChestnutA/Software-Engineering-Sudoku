@@ -172,8 +172,9 @@ int main(int argc, char *argv[])
             std::cerr
                 << "Unable to open '" << game_path << "'."
                 << std::endl;
+            return 1;
         }
-        std::ofstream fout("solution.txt");
+        std::ofstream fout("sudoku.txt");
         Solver solver;
         while (!fin.eof())
         {
@@ -239,7 +240,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    system("pause");
+    // system("pause");
     return 0;
 }
 

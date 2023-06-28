@@ -212,27 +212,27 @@ int Generator::_reduce_recursion(int cutoff)
 /// @param count 解的个数
 void Generator::_check_recursion(int &count)
 {
-    // Cell *cur = nullptr;
-    // for (auto &cell : board.cells)
-    // {
-    //     if (cell->value == 0)
-    //     {
-    //         cur = cell;
-    //         break;
-    //     }
-    // }
-    // if (!cur)
-    // {
-    //     count++;
-    //     return;
-    // }
-    auto v = board.get_unused_cells();
-    if (v.empty())
+    Cell *cur = nullptr;
+    for (auto &cell : board.cells)
+    {
+        if (cell->value == 0)
+        {
+            cur = cell;
+            break;
+        }
+    }
+    if (!cur)
     {
         count++;
         return;
     }
-    Cell *cur = v[rng() % v.size()];
+    // auto v = board.get_unused_cells();
+    // if (v.empty())
+    // {
+    //     count++;
+    //     return;
+    // }
+    // Cell *cur = v[rng() % v.size()];
 
     auto candidates = board.get_candidates(cur);
     // auto seed = std::chrono::system_clock::now().time_since_epoch().count();

@@ -127,7 +127,7 @@ int Board::get_possibility(Cell *cell)
     return possibility;
 }
 
-size_t Board::get_peer(Cell *cell)
+int Board::get_peer(Cell *cell)
 {
     std::unordered_set<Cell *> peer;
     for (auto &neighbor : rows[cell->row])
@@ -228,14 +228,14 @@ void Board::_swap_floor(int floor_index1, int floor_index2)
     _allow_swap = false;
 }
 
-void Board::shuffle(size_t iter_num)
+void Board::shuffle(int iter_num)
 {
     static auto seed = std::chrono::system_clock::now().time_since_epoch().count();
     static std::default_random_engine engine(seed);
     static std::uniform_int_distribution<> op(0, 3);
     static std::uniform_int_distribution<> region(0, N - 1);
     static std::uniform_int_distribution<> offset(1, N - 1);
-    for (size_t _ = 0; _ < iter_num; _++)
+    for (int _ = 0; _ < iter_num; _++)
     {
         int choice = op(engine),
             chute = region(engine) * N,
