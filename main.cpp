@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <regex>
 #include <utility>
 #include <vector>
 #include <map>
@@ -27,8 +28,10 @@ bool unique_solution;
 int main(int argc, char *argv[])
 {
     std::string game_path;
-    int opt, order = 0;
+    std::string range_str;
+    std::smatch range_match;
     char *_Context = nullptr;
+    int opt, order = 0;
     while ((opt = getopt(argc, argv, "c:s:n:m:r:u")) != -1)
     {
         opts.push_back(opt);
@@ -55,8 +58,16 @@ int main(int argc, char *argv[])
             break;
         case 'r':
             op_r = true;
-            blank_num.first = atoi(strtok_s(optarg, "-", &_Context));
-            blank_num.second = atoi(strtok_s(NULL, "-", &_Context));
+            range_str = optarg;
+            if (!std::regex_match(range_str, range_match, std::regex(R"(^(\d+)~(\d+)$)")))
+            {
+                std::cerr
+                    << "Format of argument r should be like '20~55'."
+
+                    << std::endl;
+                return 1;
+            }
+            blank_num = {std::stoi(range_match[1]), std::stoi(range_match[2])};
             break;
         case 'u':
             op_u = true;

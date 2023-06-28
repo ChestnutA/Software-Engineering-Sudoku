@@ -30,8 +30,8 @@ private:
    // be true only during `_swap_tower` and `_swap_floor`
    bool _allow_swap;
    // implements for the interface `shuffle()`
-   std::array<std::function<void(Board &, int, int)>, 4>
-       swaps{_swap_row, _swap_col, _swap_tower, _swap_floor};
+   // std::array<std::function<void(Board &, int, int)>, 4>
+   //     swaps{_swap_row, _swap_col, _swap_tower, _swap_floor};
 
 // Make it easy to debug (I/O)
 public:

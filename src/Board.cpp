@@ -241,32 +241,32 @@ void Board::shuffle(size_t iter_num)
             chute = region(engine) * N,
             off1 = region(engine),
             off2 = (off1 + offset(engine)) % N;
-        if (choice < 2)
-        {
-            swaps[choice](*this, chute + off1, chute + off2);
-        }
-        else
-        {
-            swaps[choice](*this, off1, off2);
-        }
-        // switch (op(engine))
+        // if (choice < 2)
         // {
-        // case 0:
-        //     _swap_row(chute + off1, chute + off2);
-        //     break;
-        // case 1:
-        //     _swap_col(chute + off1, chute + off2);
-        //     break;
-        // case 2:
-        //     _swap_tower(off1, off2);
-        //     break;
-        // case 3:
-        //     _swap_floor(off1, off2);
-        //     break;
-
-        // default:
-        //     break;
+        //     swaps[choice](*this, chute + off1, chute + off2);
         // }
+        // else
+        // {
+        //     swaps[choice](*this, off1, off2);
+        // }
+        switch (choice)
+        {
+        case 0:
+            _swap_row(chute + off1, chute + off2);
+            break;
+        case 1:
+            _swap_col(chute + off1, chute + off2);
+            break;
+        case 2:
+            _swap_tower(off1, off2);
+            break;
+        case 3:
+            _swap_floor(off1, off2);
+            break;
+
+        default:
+            break;
+        }
     }
 }
 
