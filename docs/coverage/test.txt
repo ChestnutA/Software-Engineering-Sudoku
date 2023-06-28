@@ -1,0 +1,20 @@
+sudoku.exe -c 10
+sudoku.exe -c 0
+sudoku.exe -s resource/game.txt
+sudoku.exe -s resource/fmewojnfw.txt
+sudoku.exe -n 0 -n 0
+sudoku.exe -n 10
+sudoku.exe -n 10 -m 4
+sudoku.exe -n 10 -m 2
+sudoku.exe -n 10 -m 2 -u
+sudoku.exe -n 10 -r 10~60
+sudoku.exe -n 10 -r 35~25
+sudoku.exe -n 10 -r 20~55
+sudoku.exe -n 10 -r 50~55 -u
+sudoku.exe -m 3 -r 20~21 -u
+sudoku.exe -i
+sudoku.exe
+
+sudoku.exe -n 10 -r 30~40 -m 3
+sudoku.exe -n 10 -m 2 -r 20~40
+sudoku.exe -n 10 -r 30~40 -m 3 -u

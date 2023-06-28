@@ -2,6 +2,7 @@
 /*.txt
 !CMakeLists.txt
 /*.exe
+!sudoku.exe
 # Clion files
 /cmake-build-debug
 /.idea
